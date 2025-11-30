@@ -1,0 +1,389 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Аккаунт - Корпоративный портал</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #fdbb2d;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .user-info i {
+            color: #fdbb2d;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .account-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .account-header h1 {
+            font-size: 2.2rem;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .account-header i {
+            font-size: 3rem;
+            color: #fdbb2d;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a2a6c;
+            font-size: 1rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 38px;
+            color: #1a2a6c;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 40px;
+            border: 2px solid #e1e5ee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(26, 42, 108, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #2a3a9c, #3a4abc);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 42, 108, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .roles-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e1e5ee;
+        }
+
+        .roles-section h2 {
+            font-size: 1.5rem;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .roles-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .role-badge {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(26, 42, 108, 0.2);
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #6c757d, #5a6268);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(to right, #5a6268, #495057);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-menu {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .account-card {
+                padding: 25px;
+            }
+
+            .account-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .roles-list {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <h1>Корпоративный портал</h1>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${currUser.firstName + ' ' + currUser.lastName}">User</span>
+            </div>
+            <div class="nav-buttons">
+                <a href="/success" class="nav-btn">
+                    <i class="fas fa-home"></i> Главная
+                </a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="nav-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="account-card">
+        <div class="account-header">
+            <i class="fas fa-user-circle"></i>
+            <h1>Данные аккаунта</h1>
+        </div>
+
+        <form th:action="@{/success/account/update}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="form-group">
+                <label for="firstName"><i class="fas fa-user"></i> Имя</label>
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input type="text" name="firstName" id="firstName" th:value="${currUser.firstName}" />
+            </div>
+
+            <div class="form-group">
+                <label for="lastName"><i class="fas fa-user"></i> Фамилия</label>
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input type="text" name="lastName" id="lastName" th:value="${currUser.lastName}" />
+            </div>
+
+            <div class="form-group">
+                <label for="username"><i class="fas fa-at"></i> Имя пользователя</label>
+                <div class="input-icon">
+                    <i class="fas fa-at"></i>
+                </div>
+                <input type="text" name="username" id="username" th:value="${currUser.username}" />
+            </div>
+
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <input type="email" name="email" id="email" th:value="${currUser.email}" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Номер телефона</label>
+                <div class="input-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <input type="tel" name="phone" id="phone" th:value="${currUser.phone}" />
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i> Сохранить изменения
+            </button>
+        </form>
+
+        <div class="roles-section">
+            <h2>
+                <i class="fas fa-user-shield"></i>
+                Роли пользователя
+            </h2>
+            <div class="roles-list">
+                <div th:each="role : ${currUser.roles}" class="role-badge">
+                    <span th:text="${role.name}">Роль</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="/success" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Назад на главную
+        </a>
+    </div>
+</div>
+</body>
+</html>

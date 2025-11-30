@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Фиксированное верхнее меню */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        .nav-item:hover {
+            background-color: #f5f5f5;
+            color: #2575fc;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-item.logout {
+            color: #f5576c;
+        }
+
+        .nav-item.logout:hover {
+            background-color: #ffeaea;
+        }
+
+        .nav-item.admin {
+            color: #ff416c;
+        }
+
+        .nav-item.admin:hover {
+            background-color: #ffeaea;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Измененный заголовок - без белого фона */
+        .cart-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .cart-header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .username {
+            color: #ffd700;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .cart-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .cart-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-table th:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .cart-table th:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        .cart-table td {
+            padding: 20px 12px;
+            border-bottom: 1px solid #e1e5e9;
+            color: #333;
+        }
+
+        .cart-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .cart-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .product-price {
+            font-weight: 700;
+            color: #2575fc;
+            font-size: 18px;
+        }
+
+        .product-material {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .quantity-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 60px;
+        }
+
+        .total-amount {
+            font-weight: 700;
+            color: #ff416c;
+            font-size: 18px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-increase {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-increase:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-remove {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+
+        .btn-remove:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+        }
+
+        .order-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 30px;
+            color: white;
+        }
+
+        .order-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-input {
+            padding: 14px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-order {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-cart-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-cart h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .empty-cart p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .cart-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .cart-table th,
+            .cart-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cart-section,
+            .order-section {
+                padding: 20px;
+            }
+
+            .cart-header h1 {
+                font-size: 28px;
+            }
+
+            .cart-section h2 {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-item {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="top-navbar">
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="/home" class="nav-item home">
+                <img th:src="@{/home.svg}" alt="Домой" class="nav-icon">
+                <span>Домой</span>
+            </a>
+            <a href="/home/account" class="nav-item">
+                <div class="profile-icon">
+                    <span th:text="${#strings.substring(username, 0, 1)}">U</span>
+                </div>
+            </a>
+            <a href="/home/cart" class="nav-item">
+                <img th:src="@{/basket.svg}" alt="Корзина" class="nav-icon">
+                <span>Корзина</span>
+            </a>
+            <a href="/home/order" class="nav-item">
+                <img th:src="@{/trolley.svg}" alt="Заказы" class="nav-icon">
+                <span>Заказы</span>
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <form action="/logout" method="post" style="display: inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="nav-item logout" style="background: none; border: none; cursor: pointer; display: flex; align-items: center;">
+                    <img th:src="@{/logout.svg}" alt="Выход" class="nav-icon">
+                    <span>Выход</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Заголовок теперь на синем фоне с белыми буквами -->
+    <div class="cart-header">
+        <h1>🛒 Корзина пользователя <span class="username" th:text="${username}">User</span></h1>
+    </div>
+
+    <div class="cart-section">
+        <h2>📦 Список товаров</h2>
+
+        <div th:if="${errorMessage != null}" class="error-message">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <div th:if="${products != null and !products.empty}">
+            <table class="cart-table">
+                <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Материал</th>
+                    <th>Количество</th>
+                    <th>Сумма</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td>
+                        <div class="product-name" th:text="${product.getFirst().name}">Название товара</div>
+                    </td>
+                    <td>
+                        <div class="product-price" th:text="${product.getFirst().cost + ' ₽'}">Цена товара</div>
+                    </td>
+                    <td>
+                        <div class="product-material" th:text="${product.getFirst().material}">Материал</div>
+                    </td>
+                    <td>
+                        <div class="quantity-badge" th:text="${product.getSecond().getFirst()}">Количество</div>
+                    </td>
+                    <td>
+                        <div class="total-amount" th:text="${product.getSecond().getSecond() + ' ₽'}">Сумма</div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <form th:action="@{/home/cart/increaseQuantity}" method="post" style="display:inline;">
+                                <input type="hidden" th:name="productId" th:value="${product.getFirst().id}" />
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-increase">
+                                    ➕ Увеличить
+                                </button>
+                            </form>
+                            <form th:action="@{/home/cart/remove}" method="post" style="display:inline;">
+                                <input type="hidden" th:name="productId" th:value="${product.getFirst().id}" />
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-remove">
+                                    🗑️ Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${products == null or products.empty}" class="empty-cart">
+            <h3>Корзина пуста</h3>
+            <p>Добавьте товары, чтобы увидеть их здесь</p>
+            <a href="/home" class="btn-continue">Продолжить покупки</a>
+        </div>
+    </div>
+
+    <div th:if="${products != null and !products.empty}" class="order-section">
+        <h3>Оформление заказа</h3>
+        <form th:action="@{/home/order}" method="post" class="order-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-group">
+                <label for="address">Адрес доставки:</label>
+                <input type="text" id="address" name="address" class="form-input"
+                       placeholder="Введите ваш адрес" required>
+            </div>
+            <button type="submit" class="btn-order">
+                Оформить заказ
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

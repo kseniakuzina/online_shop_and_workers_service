@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Фиксированное верхнее меню */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        .nav-item:hover {
+            background-color: #f5f5f5;
+            color: #2575fc;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-item.logout {
+            color: #f5576c;
+        }
+
+        .nav-item.logout:hover {
+            background-color: #ffeaea;
+        }
+
+        .nav-item.admin {
+            color: #ff416c;
+        }
+
+        .nav-item.admin:hover {
+            background-color: #ffeaea;
+        }
+
+        .nav-item.home {
+            color: #2575fc;
+        }
+
+        .nav-item.home:hover {
+            background-color: #e6f0ff;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .account-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .account-header h1 {
+            color: #333;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .account-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2575fc;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+        }
+
+        .roles-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 30px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .roles-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .roles-list {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .role-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .role-badge.admin {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+
+        .role-badge.user {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .account-card {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .account-header h1 {
+                font-size: 28px;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .account-card {
+                padding: 20px;
+            }
+
+            .account-header h1 {
+                font-size: 24px;
+            }
+
+            .roles-list {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-item {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="top-navbar">
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="/home" class="nav-item home">
+                <img th:src="@{/home.svg}" alt="Домой" class="nav-icon">
+                <span>Домой</span>
+            </a>
+            <a href="/home/account" class="nav-item">
+                <div class="profile-icon">
+                    <span th:text="${#strings.substring(currUser.username, 0, 1)}">U</span>
+                </div>
+            </a>
+            <a href="/home/cart" class="nav-item">
+                <img th:src="@{/basket.svg}" alt="Корзина" class="nav-icon">
+                <span>Корзина</span>
+            </a>
+            <a href="/home/order" class="nav-item">
+                <img th:src="@{/trolley.svg}" alt="Заказы" class="nav-icon">
+                <span>Заказы</span>
+            </a>
+            <div th:if="${#lists.contains(currUser.roles, 'ROLE_ADMIN')}">
+                <a href="home/admin" class="nav-item admin">
+                    <img th:src="@{/admin-generic.svg}" alt="Админ" class="nav-icon">
+                    <span>Админ</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <form action="/logout" method="post" style="display: inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="nav-item logout" style="background: none; border: none; cursor: pointer; display: flex; align-items: center;">
+                    <img th:src="@{/logout.svg}" alt="Выход" class="nav-icon">
+                    <span>Выход</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="account-card">
+        <div class="account-header">
+            <h1>Данные аккаунта</h1>
+            <p>Управление вашей личной информацией</p>
+        </div>
+
+        <div th:if="${param.success != null}" class="success-message show">
+            Данные успешно обновлены!
+        </div>
+
+        <form th:action="@{/home/account/update}" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Имя</label>
+                    <input type="text" id="firstName" name="firstName" th:value="${currUser.firstName}" class="form-input" placeholder="Введите ваше имя">
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Фамилия</label>
+                    <input type="text" id="lastName" name="lastName" th:value="${currUser.lastName}" class="form-input" placeholder="Введите вашу фамилию">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" th:value="${currUser.username}" class="form-input" placeholder="Введите имя пользователя">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email адрес</label>
+                <input type="email" id="email" name="email" th:value="${currUser.email}" class="form-input" placeholder="Введите ваш email">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="tel" id="phone" name="phone" th:value="${currUser.phone}" class="form-input" placeholder="Введите номер телефона">
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Сохранить изменения
+            </button>
+        </form>
+
+        <div class="roles-section">
+            <h2>Роли пользователя</h2>
+            <div class="roles-list">
+                <div th:each="role : ${currUser.roles}"
+                     class="role-badge"
+                     th:classappend="${role.name == 'ROLE_ADMIN'} ? 'admin' : 'user'"
+                     th:text="${role.name == 'ROLE_ADMIN'} ? 'Администратор' : 'Пользователь'">
+                    Роль
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Показываем сообщение об успехе на 5 секунд
+    const successMessage = document.querySelector('.success-message');
+    if (successMessage && successMessage.classList.contains('show')) {
+        setTimeout(() => {
+            successMessage.classList.remove('show');
+        }, 5000);
+    }
+
+    // Добавляем валидацию форм
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const inputs = this.querySelectorAll('input[required]');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.style.borderColor = '#ff416c';
+                isValid = false;
+            } else {
+                input.style.borderColor = '#e1e5e9';
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Пожалуйста, заполните все обязательные поля');
+        }
+    });
+</script>
+</body>
+</html>

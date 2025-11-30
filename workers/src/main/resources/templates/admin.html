@@ -1,0 +1,387 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Панель администратора - Корпоративный портал</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #fdbb2d;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .user-info i {
+            color: #fdbb2d;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-header:hover {
+            transform: translateY(-5px);
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .admin-header p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .admin-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .admin-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #1a2a6c;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .admin-card h3 {
+            font-size: 1.4rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-card p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .admin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(26, 42, 108, 0.3);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .admin-btn:hover {
+            background: linear-gradient(to right, #2a3a9c, #3a4abc);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 42, 108, 0.4);
+        }
+
+        .admin-btn-secondary {
+            background: linear-gradient(to right, #28a745, #20c997);
+        }
+
+        .admin-btn-secondary:hover {
+            background: linear-gradient(to right, #20c997, #1ea87c);
+        }
+
+        .admin-btn-warning {
+            background: linear-gradient(to right, #fd7e14, #e95c10);
+        }
+
+        .admin-btn-warning:hover {
+            background: linear-gradient(to right, #e95c10, #d54a0c);
+        }
+
+        .admin-btn-danger {
+            background: linear-gradient(to right, #dc3545, #c82333);
+        }
+
+        .admin-btn-danger:hover {
+            background: linear-gradient(to right, #c82333, #b21f2d);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, #6c757d, #5a6268);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(to right, #5a6268, #495057);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-menu {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .admin-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <h1>Корпоративный портал</h1>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <span>Панель администратора</span>
+            </div>
+            <div class="nav-buttons">
+                <a href="/success" class="nav-btn">
+                    <i class="fas fa-home"></i> Главная
+                </a>
+                <a href="/success/account" class="nav-btn">
+                    <i class="fas fa-user"></i> Аккаунт
+                </a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="nav-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="admin-header">
+        <h1>
+            <i class="fas fa-crown"></i>
+            Панель администратора
+        </h1>
+        <p>Управление пользователями, ролями и системными настройками</p>
+    </div>
+
+    <div class="admin-cards">
+        <div class="admin-card">
+            <h3><i class="fas fa-users"></i> Управление пользователями</h3>
+            <p>Просмотр списка всех зарегистрированных пользователей системы</p>
+            <form action="/success/admin/allusers" method="get" style="margin: 0;">
+                <button type="submit" class="admin-btn">
+                    <i class="fas fa-list"></i> Посмотреть список всех пользователей
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-user-tag"></i> Управление ролями</h3>
+            <p>Просмотр и управление системными ролями и правами доступа</p>
+            <form action="/success/admin/allroles" method="get" style="margin: 0;">
+                <button type="submit" class="admin-btn admin-btn-secondary">
+                    <i class="fas fa-tags"></i> Посмотреть список ролей
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-user-plus"></i> Назначение ролей</h3>
+            <p>Выдача и изменение ролей для пользователей системы</p>
+            <form action="/success/admin/grantrole" method="get" style="margin: 0;">
+                <button type="submit" class="admin-btn admin-btn-warning">
+                    <i class="fas fa-user-check"></i> Выдать роль
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-plus-circle"></i> Создание ролей</h3>
+            <p>Добавление новых ролей в систему с определенными правами</p>
+            <form action="/success/admin/addrole" method="get" style="margin: 0;">
+                <button type="submit" class="admin-btn admin-btn-secondary">
+                    <i class="fas fa-plus"></i> Создать роль
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-user-shield"></i> Пользователи и роли</h3>
+            <p>Детальный просмотр пользователей с назначенными ролями</p>
+            <form action="/success/admin/alluserswithroles" method="get" style="margin: 0;">
+                <button type="submit" class="admin-btn">
+                    <i class="fas fa-id-card"></i> Пользователи с ролями
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-chart-bar"></i> Статистика системы</h3>
+            <p>Просмотр аналитики и статистики использования системы</p>
+            <button type="button" class="admin-btn admin-btn-danger" disabled>
+                <i class="fas fa-chart-line"></i> Статистика (скоро)
+            </button>
+        </div>
+    </div>
+
+    <a href="/success" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Назад на главную
+    </a>
+</div>
+</body>
+</html>

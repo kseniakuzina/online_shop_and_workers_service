@@ -1,0 +1,344 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Главная - Корпоративный портал</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #fdbb2d;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .user-info i {
+            color: #fdbb2d;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-section {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .welcome-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .welcome-section h1 {
+            font-size: 2rem;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+            color: #555;
+            text-align: center;
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .role-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-left: 5px solid #1a2a6c;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-card h3 {
+            font-size: 1.4rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .role-card i {
+            font-size: 1.6rem;
+            color: #fdbb2d;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(26, 42, 108, 0.3);
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #2a3a9c, #3a4abc);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 42, 108, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #5a6268);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #5a6268, #495057);
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-card h3 {
+            font-size: 1.3rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .action-card form {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-menu {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .welcome-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .role-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <h1>Корпоративный портал</h1>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Привет, <span th:text="${username}">User</span>!</span>
+            </div>
+            <div class="nav-buttons">
+                <a href="/success/account" class="nav-btn">
+                    <i class="fas fa-user"></i> Мой аккаунт
+                </a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="nav-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="welcome-section">
+        <h1>Авторизация прошла успешно!</h1>
+        <p>Выберите нужный раздел для работы в системе</p>
+    </div>
+
+    <div class="role-cards">
+        <div th:if="${#lists.contains(roles, 'ROLE_ADMIN')}" class="role-card">
+            <h3><i class="fas fa-crown"></i> Администратор</h3>
+            <p>Управление системой и пользователями</p>
+            <a href="success/admin" class="btn">Панель администратора</a>
+        </div>
+
+        <div th:if="${#lists.contains(roles, 'ROLE_CURIER')}" class="role-card">
+            <h3><i class="fas fa-shipping-fast"></i> Курьер</h3>
+            <p>Управление доставками и заказами</p>
+            <a href="success/curier" class="btn btn-secondary">Панель курьера</a>
+        </div>
+
+        <div th:if="${#lists.contains(roles, 'ROLE_MANAGER')}" class="role-card">
+            <h3><i class="fas fa-clipboard-list"></i> Менеджер</h3>
+            <p>Управление заказами и клиентами</p>
+            <a href="success/manager" class="btn btn-secondary">Панель менеджера</a>
+        </div>
+
+        <div th:if="${#lists.contains(roles, 'ROLE_COLLECTOR')}" class="role-card">
+            <h3><i class="fas fa-boxes"></i> Сборщик</h3>
+            <p>Сборка и комплектация заказов</p>
+            <a href="success/collector" class="btn btn-secondary">Панель сборщика</a>
+        </div>
+
+        <div th:if="${#lists.contains(roles, 'ROLE_STORAGE')}" class="role-card">
+            <h3><i class="fas fa-warehouse"></i> Работник склада</h3>
+            <p>Управление складскими операциями</p>
+            <a href="success/storage" class="btn btn-secondary">Панель работника склада</a>
+        </div>
+    </div>
+
+    <div class="action-cards">
+        <div class="action-card">
+            <h3>Мои задачи</h3>
+            <p>Просмотр и управление текущими задачами</p>
+            <form action="/success/tasks">
+                <button type="submit" class="btn">
+                    <i class="fas fa-tasks"></i> Посмотреть мои задачи
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

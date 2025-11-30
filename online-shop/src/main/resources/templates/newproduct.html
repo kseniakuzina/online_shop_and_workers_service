@@ -1,0 +1,420 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Добавление продукта</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Фиксированное верхнее меню */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        .nav-item:hover {
+            background-color: #f5f5f5;
+            color: #2575fc;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-item.logout {
+            color: #f5576c;
+        }
+
+        .nav-item.logout:hover {
+            background-color: #ffeaea;
+        }
+
+        .nav-item.admin {
+            color: #ff416c;
+            background-color: #ffeaea;
+        }
+
+        .nav-item.admin:hover {
+            background-color: #ffd1d9;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Заголовок на синем фоне */
+        .product-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .product-header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .product-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+        }
+
+        .form-input:invalid {
+            border-color: #ff416c;
+        }
+
+        .form-input:valid {
+            border-color: #11998e;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .back-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        .form-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .product-section {
+                padding: 30px 20px;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-header h1 {
+                font-size: 28px;
+            }
+
+            .product-subtitle {
+                font-size: 16px;
+            }
+
+            .form-input {
+                padding: 12px 14px;
+            }
+
+            .btn-submit {
+                padding: 14px 24px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-item {
+                padding: 10px;
+            }
+        }
+    </style>
+    <script>
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const quantity = document.getElementById('quantity').value;
+            const material = document.getElementById('material').value;
+            const cost = document.getElementById('cost').value;
+
+            if (!name || !quantity || !material || !cost) {
+                alert('Пожалуйста, заполните все поля');
+                return false;
+            }
+
+            if (quantity < 0) {
+                alert('Количество не может быть отрицательным');
+                return false;
+            }
+
+            if (cost <= 0) {
+                alert('Стоимость должна быть больше 0');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+<nav class="top-navbar">
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="/home" class="nav-item home">
+                <img th:src="@{/home.svg}" alt="Домой" class="nav-icon">
+                <span>Домой</span>
+            </a>
+            <a href="/home/account" class="nav-item">
+                <div class="profile-icon">
+                    <span>A</span>
+                </div>
+            </a>
+            <a href="/home/cart" class="nav-item">
+                <img th:src="@{/basket.svg}" alt="Корзина" class="nav-icon">
+                <span>Корзина</span>
+            </a>
+            <a href="/home/order" class="nav-item">
+                <img th:src="@{/trolley.svg}" alt="Заказы" class="nav-icon">
+                <span>Заказы</span>
+            </a>
+            <a href="/home/admin" class="nav-item admin">
+                <img th:src="@{/admin-generic.svg}" alt="Админ" class="nav-icon">
+                <span>Админ</span>
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <form action="/logout" method="post" style="display: inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="nav-item logout" style="background: none; border: none; cursor: pointer; display: flex; align-items: center;">
+                    <img th:src="@{/logout.svg}" alt="Выход" class="nav-icon">
+                    <span>Выход</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="product-header">
+        <h1>Добавление продукта</h1>
+        <p class="product-subtitle">Заполните информацию о новом товаре</p>
+    </div>
+
+    <div class="product-section">
+        <form method="POST" th:action="@{/home/admin/newproduct}" id="registerForm" onsubmit="return validateForm();" class="product-form">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <div class="form-group">
+                <label for="name">
+                    Название продукта
+                </label>
+                <input type="text" name="name" id="name" class="form-input" placeholder="Введите название продукта" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">
+                    Количество на складе
+                </label>
+                <input type="number" name="quantity" id="quantity" class="form-input" placeholder="Введите количество" min="0" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="material">
+                    Материал
+                </label>
+                <input type="text" name="material" id="material" class="form-input" placeholder="Введите материал" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="cost">
+                    Стоимость
+                </label>
+                <input type="number" name="cost" id="cost" class="form-input" placeholder="Введите стоимость" min="0.01" step="0.01" required/>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                ➕ Добавить новый продукт
+            </button>
+        </form>
+
+        <div class="back-section">
+            <a href="/home/admin" class="btn-back">
+                <img th:src="@{/back.svg}" alt="Назад" class="nav-icon">
+                Назад в панель администратора
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
