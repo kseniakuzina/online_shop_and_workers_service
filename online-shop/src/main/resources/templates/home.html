@@ -256,15 +256,43 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .product-image {
+        /* Обновленный стиль для контейнера изображения */
+        .product-image-container {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background-color: #f5f5f5;
+            height: 0;
+            padding-bottom: 133.33%; /* Соотношение 3:4 (3/4*100%) */
+            position: relative;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Обрезает изображение чтобы заполнить контейнер */
+            object-position: center; /* Центрирует изображение */
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        /* Стиль для заглушки при отсутствии изображения */
+        .product-image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #6c757d;
             font-size: 14px;
         }
 
@@ -280,12 +308,14 @@
             font-weight: 600;
             color: #333;
             margin-bottom: 10px;
+            line-height: 1.3;
         }
 
         .product-material {
             color: #666;
             font-size: 14px;
             margin-bottom: 15px;
+            line-height: 1.4;
         }
 
         .product-price {
@@ -320,6 +350,21 @@
         .add-to-cart-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+        }
+        .product-details {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-gender,
+        .product-category {
+            display: inline-block;
+        }
+
+        .product-separator {
+            margin: 0 5px;
+            color: #999;
         }
 
         @media (max-width: 768px) {
@@ -409,6 +454,48 @@
 <div class="container">
     <div class="products-section">
         <h2>Список товаров</h2>
+        <div class="filter-section" style="margin-bottom: 30px;">
+            <form th:action="@{/home}" method="get" class="filter-form">
+                <div class="filter-row" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                    <div class="filter-group">
+                        <label for="gender" style="display: block; margin-bottom: 5px; font-weight: 500; color: #333;">
+                            Пол:
+                        </label>
+                        <select id="gender" name="gender" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; min-width: 150px;">
+                            <option value="">Все</option>
+                            <option th:each="gender : ${genderMap}"
+                                    th:value="${gender.key}"
+                                    th:text="${gender.value}"
+                                    th:selected="${param.gender != null and param.gender[0] == gender.key}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="category" style="display: block; margin-bottom: 5px; font-weight: 500; color: #333;">
+                            Категория:
+                        </label>
+                        <select id="category" name="category" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; min-width: 200px;">
+                            <option value="">Все</option>
+                            <option th:each="category : ${clothesTypeMap}"
+                                    th:value="${category.key}"
+                                    th:text="${category.value}"
+                                    th:selected="${param.category != null and param.category[0] == category.key}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="filter-buttons" style="align-self: flex-end;">
+                        <button type="submit" style="background: linear-gradient(to right, #6a11cb, #2575fc); color: white; border: none; border-radius: 6px; padding: 10px 20px; cursor: pointer; font-weight: 500;">
+                            Применить фильтр
+                        </button>
+                        <a th:href="@{/home}" style="margin-left: 10px; padding: 10px 20px; background: #f5f5f5; color: #333; border-radius: 6px; text-decoration: none; display: inline-block;">
+                            Сбросить
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <div th:if="${errorMessage != null}" class="error-message">
             <span th:text="${errorMessage}"></span>
@@ -416,14 +503,33 @@
 
         <div class="products-grid">
             <div class="product-card" th:each="product : ${products}">
-                <!-- Заглушка для изображения товара - замените на реальное изображение -->
-                <div class="product-image">
-                    Изображение товара
-                    <!-- В реальном приложении здесь будет: -->
-                    <!-- <img th:src="${product.imageUrl}" alt="Product Image" /> -->
+                <!-- Контейнер для изображения товара с соотношением 3:4 -->
+                <div class="product-image-container">
+                    <!-- Отображаем изображение если оно есть -->
+                    <img th:if="${product.image != null and product.image != ''}"
+                         th:src="@{${product.image}}"
+                         alt="Изображение товара"
+                         class="product-image"
+                         onerror="this.onerror=null; this.style.display='none'; this.parentNode.querySelector('.product-image-placeholder').style.display='flex';">
+
+                    <!-- Заглушка если изображение отсутствует -->
+                    <div th:if="${product.image == null or product.image == ''}"
+                         class="product-image-placeholder">
+                        Изображение отсутствует
+                    </div>
                 </div>
+
                 <div class="product-info">
                     <div class="product-name" th:text="${product.name}">Название товара</div>
+                    <div class="product-details">
+                        <span class="product-gender" th:text="${genderMap[product.gender.name()]}">
+                        Гендер
+                        </span>
+                        <span class="product-separator"> • </span>
+                        <span class="product-category" th:text="${clothesTypeMap[product.clothesType.name()]}">
+                            Категория
+                        </span>
+                    </div>
                     <div class="product-material" th:text="${product.material}">Материал</div>
                     <div class="product-price" th:text="${product.cost + ' ₽'}">Цена товара</div>
                     <form action="home/cart" method="post">
@@ -439,5 +545,36 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Добавляем обработку ошибок загрузки изображений
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.product-image');
+
+        images.forEach(img => {
+            // Создаем элемент-заглушку
+            const placeholder = document.createElement('div');
+            placeholder.className = 'product-image-placeholder';
+            placeholder.textContent = 'Изображение отсутствует';
+            placeholder.style.display = 'none';
+
+            img.parentNode.appendChild(placeholder);
+
+            img.onerror = function() {
+                this.style.display = 'none';
+                placeholder.style.display = 'flex';
+            };
+
+            img.onload = function() {
+                placeholder.style.display = 'none';
+            };
+
+            if (!img.src || img.src.includes('undefined')) {
+                img.style.display = 'none';
+                placeholder.style.display = 'flex';
+            }
+        });
+    });
+</script>
 </body>
 </html>

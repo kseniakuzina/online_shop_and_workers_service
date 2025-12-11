@@ -303,28 +303,10 @@
             <a href="success/admin" class="btn">Панель администратора</a>
         </div>
 
-        <div th:if="${#lists.contains(roles, 'ROLE_CURIER')}" class="role-card">
-            <h3><i class="fas fa-shipping-fast"></i> Курьер</h3>
-            <p>Управление доставками и заказами</p>
-            <a href="success/curier" class="btn btn-secondary">Панель курьера</a>
-        </div>
-
         <div th:if="${#lists.contains(roles, 'ROLE_MANAGER')}" class="role-card">
             <h3><i class="fas fa-clipboard-list"></i> Менеджер</h3>
             <p>Управление заказами и клиентами</p>
             <a href="success/manager" class="btn btn-secondary">Панель менеджера</a>
-        </div>
-
-        <div th:if="${#lists.contains(roles, 'ROLE_COLLECTOR')}" class="role-card">
-            <h3><i class="fas fa-boxes"></i> Сборщик</h3>
-            <p>Сборка и комплектация заказов</p>
-            <a href="success/collector" class="btn btn-secondary">Панель сборщика</a>
-        </div>
-
-        <div th:if="${#lists.contains(roles, 'ROLE_STORAGE')}" class="role-card">
-            <h3><i class="fas fa-warehouse"></i> Работник склада</h3>
-            <p>Управление складскими операциями</p>
-            <a href="success/storage" class="btn btn-secondary">Панель работника склада</a>
         </div>
     </div>
 

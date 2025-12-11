@@ -1,0 +1,1 @@
+SELECT setval('t_role_id_seq', COALESCE((SELECT MAX(id) FROM t_role), 1));

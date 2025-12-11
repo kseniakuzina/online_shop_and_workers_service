@@ -347,16 +347,15 @@
             <i class="fas fa-clipboard-list"></i>
             Панель менеджера
         </h1>
-        <p>Управление задачами и заказами сотрудников</p>
+        <p>Управление задачами сотрудников</p>
     </div>
 
     <div class="manager-actions">
         <div class="action-card">
-            <h3><i class="fas fa-shopping-cart"></i> Управление заказами</h3>
-            <p>Просмотр и управление активными заказами</p>
+            <h3> Просмотр задач</h3>
             <form action="/success/manager/order" method="get" style="margin: 0;">
                 <button type="submit" class="orders-btn">
-                    <i class="fas fa-list"></i> Активные заказы
+                    <i class="fas fa-list"></i> Список задач
                 </button>
             </form>
         </div>
@@ -364,7 +363,15 @@
         <div class="action-card">
             <h3><i class="fas fa-tasks"></i> Создание задачи</h3>
             <p>Назначьте новую задачу сотруднику</p>
+            <div th:if="${success}" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
 
+            <div th:if="${error}" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
             <form method="POST" th:action="@{/success/manager}" id="registerForm">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
@@ -395,8 +402,8 @@
         </div>
     </div>
 
-    <a href="/success" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Назад на главную
+    <a href="/success/manager" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Назад в панель менеджера
     </a>
 </div>
 

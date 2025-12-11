@@ -302,7 +302,7 @@
             <p>Добавьте новую роль в систему</p>
         </div>
 
-        <form method="POST" th:action="@{/success/admin/addrole}" id="registerForm">
+        <form method="POST" th:action="@{/success/admin/addrole}" id="registerForm" onsubmit="return validateForm()">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <div class="form-group">
@@ -332,6 +332,11 @@
 
         if (name.trim() === '') {
             alert("Пожалуйста, введите название роли");
+            return false;
+        }
+
+        if (!name.trim().startsWith("ROLE_")) {
+            alert("Название роли должно начинаться с ROLE_");
             return false;
         }
 

@@ -1,0 +1,1 @@
+SELECT setval('t_product_id_seq', COALESCE((SELECT MAX(id) FROM t_product), 1));

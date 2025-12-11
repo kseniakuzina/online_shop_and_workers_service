@@ -191,6 +191,28 @@
             border-color: #11998e;
         }
 
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 12px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select.form-input:required:invalid {
+            color: #6c757d;
+        }
+
+        select.form-input option {
+            color: #333;
+        }
+
+        select.form-input option[value=""] {
+            color: #6c757d;
+        }
+
         .btn-submit {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
@@ -307,8 +329,11 @@
             const quantity = document.getElementById('quantity').value;
             const material = document.getElementById('material').value;
             const cost = document.getElementById('cost').value;
+            const gender = document.getElementById('gender').value;
+            const clothesType = document.getElementById('clothesType').value;
+            const imageFile = document.getElementById('imageFile').value;
 
-            if (!name || !quantity || !material || !cost) {
+            if (!name || !quantity || !material || !cost || !gender || !clothesType || !imageFile) {
                 alert('Пожалуйста, заполните все поля');
                 return false;
             }
@@ -325,6 +350,14 @@
 
             return true;
         }
+
+        // Для отображения выбранного файла
+        document.getElementById('imageFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Файл не выбран';
+            const label = e.target.previousElementSibling;
+            const originalText = 'Изображение продукта';
+            label.textContent = `${originalText} (${fileName})`;
+        });
     </script>
 </head>
 <body>
@@ -373,8 +406,9 @@
     </div>
 
     <div class="product-section">
-        <form method="POST" th:action="@{/home/admin/newproduct}" id="registerForm" onsubmit="return validateForm();" class="product-form">
+        <form method="POST" th:action="@{/home/admin/newproduct}" id="registerForm" onsubmit="return validateForm();" class="product-form" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
             <div class="form-group">
                 <label for="name">
                     Название продукта
@@ -401,6 +435,37 @@
                     Стоимость
                 </label>
                 <input type="number" name="cost" id="cost" class="form-input" placeholder="Введите стоимость" min="0.01" step="0.01" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Пол</label>
+                <select name="gender" id="gender" class="form-input" required>
+                    <option value="" selected disabled>Выберите пол</option>
+                    <option value="MALE">Мужской</option>
+                    <option value="FEMALE">Женский</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="clothesType">Тип одежды</label>
+                <select name="clothesType" id="clothesType" class="form-input" required>
+                    <option value="" selected disabled>Выберите тип одежды</option>
+                    <option value="OUTERWEAR">Верхняя одежда</option>
+                    <option value="TOP">Верх (футболки, рубашки, свитеры)</option>
+                    <option value="BOTTOM">Низ (брюки, джинсы, юбки)</option>
+                    <option value="DRESS">Платья</option>
+                    <option value="FOOTWEAR">Обувь</option>
+                    <option value="HEADWEAR">Головные уборы</option>
+                    <option value="ACCESSORIES">Аксессуары</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="imageFile">Изображение продукта</label>
+                <input type="file" name="imageFile" id="imageFile" class="form-input" accept="image/*" required/>
+                <small style="color: #666; margin-top: 5px; display: block;">
+                    Поддерживаемые форматы: JPG, PNG, WEBP. Максимальный размер: 5MB
+                </small>
             </div>
 
             <button type="submit" class="btn-submit">

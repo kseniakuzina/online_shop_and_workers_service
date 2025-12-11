@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка доступа</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 35px;
+        }
+
+        .header {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .icon {
+            font-size: 70px;
+            color: #b21f1f;
+            margin: 35px 0 15px;
+            text-shadow: 0 4px 12px rgba(178, 31, 31, 0.3);
+        }
+
+        .message-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-bottom: 12px;
+        }
+
+        .message-text {
+            font-size: 1rem;
+            color: #555;
+            padding: 0 25px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .login-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            text-decoration: none;
+            padding: 14px 35px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 42, 108, 0.3);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(to right, #2a3a9c, #3a4abc);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(26, 42, 108, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Корпоративный портал</h1>
+        <p>Ошибка доступа</p>
+    </div>
+
+    <i class="fas fa-ban icon"></i>
+
+    <h2 class="message-title">Недостаточно прав</h2>
+
+    <p class="message-text">
+        Похоже, что у вашего аккаунта нет доступа к этому разделу.<br>
+        Возможно, ваша сессия истекла — попробуйте войти снова.
+    </p>
+
+    <a href="/login" class="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Войти снова
+    </a>
+
+</div>
+
+</body>
+</html>

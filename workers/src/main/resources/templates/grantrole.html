@@ -318,6 +318,15 @@
             </h1>
             <p>Назначьте роль сотруднику системы</p>
         </div>
+        <div th:if="${success}" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${error}"></span>
+        </div>
 
         <form method="POST" th:action="@{/success/admin/grantrole}" id="registerForm">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
