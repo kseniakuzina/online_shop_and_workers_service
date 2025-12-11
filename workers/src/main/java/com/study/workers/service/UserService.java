@@ -108,6 +108,7 @@ public class UserService implements UserDetailsService {
         if (roleId == null) {
             return GrantRoleStatus.ROLE_NOT_FOUND;
         }
+
         String checkSql = "SELECT COUNT(*) FROM t_user_roles WHERE user_id = :userId AND roles_id = :roleId";
         Long count = (Long) em.createNativeQuery(checkSql)
                 .setParameter("userId", userId)
