@@ -32,7 +32,6 @@ public class HomeController {
         var tr = userService.getCurrentUser().getAuthorities();
         List<String> roles = new ArrayList<>();
         for (GrantedAuthority authority : tr) {
-            System.out.println(authority.getAuthority());
             roles.add(authority.getAuthority());
         }
         model.addAttribute("username", username);
@@ -55,7 +54,6 @@ public class HomeController {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth("service-account", "secure-password");
         if (csrfToken != null) {
-            System.out.println("туть");
             headers.add(csrfToken.getHeaderName(), csrfToken.getToken());
         }
         taskService.completeTask(id, headers);

@@ -15,6 +15,7 @@ public class CartDTO {
         this.amount = amount;
         this.status = status;
     }
+    public CartDTO() {}
 
     public Long getId() {
         return id;

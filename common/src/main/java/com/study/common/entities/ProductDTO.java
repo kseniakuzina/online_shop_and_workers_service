@@ -20,6 +20,7 @@ public class ProductDTO {
         this.gender = gender;
         this.clothesType = clothesType;
     }
+    public ProductDTO() {}
 
     public String getName() {
         return name;

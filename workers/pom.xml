@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Родитель - наш корневой проект -->
     <parent>
         <groupId>com.study</groupId>
         <artifactId>root</artifactId>
@@ -14,9 +13,7 @@
     <name>workers</name>
     <description>Demo project for Spring Boot</description>
 
-    <!-- Специфичные зависимости для workers -->
     <dependencies>
-        <!-- Spring Boot зависимости -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -42,7 +39,7 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!-- Flyway для миграций -->
+        <!-- Flyway -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -78,12 +75,10 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
-        <!-- Не нужно явно указывать lombok и spring-boot-starter-test - они наследуются из родителя -->
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Plugin наследуется из родителя -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

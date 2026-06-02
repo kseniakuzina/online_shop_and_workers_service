@@ -36,4 +36,6 @@ public class TaskDTO {
         this.description = description;
     }
 
+    public TaskDTO() {
+    }
 }

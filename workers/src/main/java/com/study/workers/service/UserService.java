@@ -13,6 +13,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
     @PersistenceContext
@@ -156,7 +158,7 @@ public class UserService implements UserDetailsService {
         try {
             return em.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
-            return null; // Или выбросьте исключение, если это более уместно
+            return null;
         }
     }
 
@@ -170,7 +172,7 @@ public class UserService implements UserDetailsService {
         try {
             return em.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
-            return null; // Или выбросьте исключение, если это более уместно
+            return null;
         }
     }
 
@@ -188,7 +190,7 @@ public class UserService implements UserDetailsService {
         if (username != null) {
             return getUserByUsername(username);
         }
-        return null; // Или выбросьте исключение, если пользователь не найден
+        return null;
     }
 
     @Transactional
@@ -213,7 +215,7 @@ public class UserService implements UserDetailsService {
             return freeUsersByRole.get(random.nextInt(freeUsersByRole.size()));
         }
 
-        System.out.println("нет свободных " + roleName);
+        log.info("Нет свободных " + roleName);
         return null;
     }
 

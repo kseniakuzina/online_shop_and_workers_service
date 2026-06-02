@@ -101,17 +101,13 @@ public class UserService implements UserDetailsService {
     public boolean grantRole(String username,String name){
         Long userId = getUserIdByUsername(username);
         if (userId == null) {
-            return false; // Пользователь не найден
+            return false;
         }
 
-        // Получаем id роли по имени
         Long roleId = getRoleIdByName(name);
         if (roleId == null) {
-            return false; // Роль не найдена
+            return false;
         }
-        System.out.println(userId);
-        System.out.println(roleId);
-        // Выполняем нативный SQL-запрос для вставки записи в таблицу customuser_role
         String sql = "INSERT INTO t_user_roles (user_id, roles_id) VALUES (:userId, :roleId)";
         int rowsInserted = em.createNativeQuery(sql)
                 .setParameter("userId", userId)
@@ -135,7 +131,7 @@ public class UserService implements UserDetailsService {
 
     public String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth != null ? auth.getName() : null; // Проверка на null
+        return auth != null ? auth.getName() : null;
     }
 
     public User getUserByUsername(String username) {
@@ -148,7 +144,7 @@ public class UserService implements UserDetailsService {
         try {
             return em.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
-            return null; // Или выбросьте исключение, если это более уместно
+            return null;
         }
     }
 
@@ -162,7 +158,7 @@ public class UserService implements UserDetailsService {
         try {
             return em.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
-            return null; // Или выбросьте исключение, если это более уместно
+            return null;
         }
     }
 
@@ -180,7 +176,7 @@ public class UserService implements UserDetailsService {
         if (username != null) {
             return getUserByUsername(username);
         }
-        return null; // Или выбросьте исключение, если пользователь не найден
+        return null;
     }
 
     public Long getCurrentUserId() {
@@ -188,7 +184,7 @@ public class UserService implements UserDetailsService {
         if (username != null) {
             return getUserIdByUsername(username);
         }
-        return null; // Или выбросьте исключение, если пользователь не найден
+        return null;
     }
 
     @Transactional

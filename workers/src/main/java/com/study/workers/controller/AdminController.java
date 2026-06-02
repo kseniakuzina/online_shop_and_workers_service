@@ -30,7 +30,6 @@ public class AdminController {
     public String getAllUsers(Model model) {
         List<User> users = userService.allUsers();
         model.addAttribute("users", users);
-        for (User i:users) System.out.println(i.getUsername());
         return "allusers";
     }
 
@@ -38,7 +37,6 @@ public class AdminController {
     public String getAllRoles(Model model) {
         List<Role> roles = userService.allRoles();
         model.addAttribute("roles", roles);
-        for (Role i:roles) System.out.println(i.getName());
         return "allroles";
     }
 

@@ -37,7 +37,6 @@ public class AdminController {
     public String getAllUsers(Model model) {
         List<User> users = userService.allUsers();
         model.addAttribute("users", users);
-        for (User i:users) System.out.println(i.getUsername());
         return "allusers";
     }
 
@@ -50,7 +49,6 @@ public class AdminController {
     public String addNewProduct(ProductDTO dto ,
                                 @RequestParam("imageFile") MultipartFile imageFile)
             throws IOException {
-        System.out.println("here1");
         if (imageFile != null && !imageFile.isEmpty()) {
             // Генерируем уникальное имя файла
             String filename = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
@@ -69,7 +67,6 @@ public class AdminController {
             dto.setImage("/images/" + filename);
         }
         productService.saveProduct(dto);
-        System.out.println("here2");
         return "redirect:/home/admin";
     }
 }

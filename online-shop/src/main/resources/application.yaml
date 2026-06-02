@@ -16,3 +16,8 @@ spring:
     baseline-on-migrate: true
     baseline-version: '1.0.0'
     locations: classpath:db/migration
+
+workers:
+  service:
+    order-url: http://localhost:8082/api/orders
+    storage-url: http://localhost:8082/api/storage

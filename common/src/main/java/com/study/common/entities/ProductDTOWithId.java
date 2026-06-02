@@ -23,6 +23,8 @@ public class ProductDTOWithId {
         this.clothesType = clothesType;
     }
 
+    public ProductDTOWithId() {}
+
     public String getName() {
         return name;
     }

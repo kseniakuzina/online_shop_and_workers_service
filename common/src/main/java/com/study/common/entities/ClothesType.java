@@ -7,5 +7,5 @@ public enum ClothesType {
     DRESS,              // Платья
     FOOTWEAR,           // Обувь
     HEADWEAR,           // Головные уборы
-    ACCESSORIES         //аксессуары
+    ACCESSORIES         // Аксессуары
 }

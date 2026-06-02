@@ -39,7 +39,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/storage").hasAuthority("SERVICE")
                         .requestMatchers("/api/**").hasAuthority("SERVICE")
                         .requestMatchers("/success", "/success/**").hasRole("USER")
-                        //.requestMatchers("/access-denied").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
@@ -59,9 +58,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-                //.exceptionHandling(exception -> exception
-                //        .accessDeniedPage("/access-denied")
-                //)
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**")
                         .ignoringRequestMatchers("/logout")

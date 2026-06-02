@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Родитель - наш корневой проект -->
     <parent>
         <groupId>com.study</groupId>
         <artifactId>root</artifactId>
@@ -14,7 +13,6 @@
     <name>online-shop</name>
     <description>project for online shop</description>
 
-    <!-- Специфичные зависимости для online-shop -->
     <dependencies>
         <!-- Spring Boot зависимости -->
         <dependency>
@@ -78,13 +76,11 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
-        <!-- Не нужно явно указывать lombok и spring-boot-starter-test - они наследуются из родителя -->
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Plugin наследуется из родителя -->
-            <!-- Можно переопределить конфигурацию при необходимости -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

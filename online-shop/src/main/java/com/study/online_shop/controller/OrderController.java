@@ -42,7 +42,6 @@ public class OrderController {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth("service-account", "secure-password");
         if (csrfToken != null) {
-            System.out.println("туть");
             headers.add(csrfToken.getHeaderName(), csrfToken.getToken());
         }
 
@@ -56,7 +55,6 @@ public class OrderController {
 
     @PostMapping("/changestatus")
     public ResponseEntity<Void> changeOrderStatus(@RequestBody Pair<Long, OrderStatus> orderIdAndStatus){
-        System.out.println("ща будем статус менять");
         orderService.updateOrderStatus(orderIdAndStatus);
         return ResponseEntity.ok().build();
     }

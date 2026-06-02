@@ -6,6 +6,7 @@ import com.study.online_shop.repository.CartRepository;
 import com.study.online_shop.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Slf4j
 @Service
@@ -31,8 +31,11 @@ public class OrderService {
     @Autowired
     UserService userService;
 
-    String workersServiceForOrderUrl = "http://localhost:8082/api/orders";
-    String workersServiceForStorageUrl = "http://localhost:8082/api/storage";
+    @Value("${workers.service.order-url}")
+    private String workersServiceForOrderUrl;
+
+    @Value("${workers.service.storage-url}")
+    private String workersServiceForStorageUrl;
 
     public boolean moveCartToOrder(String address, HttpHeaders headers) {
         User user = userService.getCurrentUser();
@@ -40,7 +43,7 @@ public class OrderService {
         if (carts.stream().allMatch(cart -> cart.getProductQuantity() <= cart.getProduct().getQuantity())){
             Order order = new Order(user, carts, address);
             Order savedOrder = orderRepository.save(order);
-            System.out.println(savedOrder.getId());
+            log.info("Сохранен заказ с id={}",savedOrder.getId());
             for (Cart cart: carts){
                 cart.setOrder(savedOrder);
                 cart.setStatus(CartStatus.IN_ORDER);
@@ -54,9 +57,7 @@ public class OrderService {
                 cartRepository.save(cart);
             }
             OrderDTO dto = mapOrder(savedOrder);
-            System.out.println(dto.getId());
             HttpEntity<OrderDTO> orderRequest = new HttpEntity<>(dto, headers);
-            System.out.println(orderRequest.getBody().getCarts().size());
             try {
                 restTemplate.postForEntity(workersServiceForOrderUrl, orderRequest, String.class);
             } catch (Exception e) {

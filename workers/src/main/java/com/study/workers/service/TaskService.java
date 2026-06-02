@@ -6,7 +6,9 @@ import com.study.workers.DTO.TaskDTO;
 import com.study.workers.entities.*;
 import com.study.workers.repository.TaskRepository;
 import com.study.workers.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TaskService {
     @Autowired
@@ -38,8 +41,11 @@ public class TaskService {
     private Queue<Task> tasksForCurier = new LinkedList<>();
     private Queue<Task> tasksForStorage = new LinkedList<>();
 
-    String onlineShopServiceUrl = "http://localhost:8080/home/order/changestatus";
-    String onlineShopServiceProductUrl = "http://localhost:8080/home/order/changeproductquantity";
+    @Value("${online-shop.service.change-status-url}")
+    private String onlineShopServiceUrl;
+
+    @Value("${online-shop.service.change-product-quantity-url}")
+    private String onlineShopServiceProductUrl;
 
     @Transactional
     public String saveTask(TaskDTO dto) {
@@ -64,17 +70,16 @@ public class TaskService {
 
     @Transactional
     public void newOrder(OrderDTO order, HttpHeaders headers){
-        System.out.println("поступил заказ " + order.getAddress());
+        log.info("Поступил заказ " + order.getAddress());
         StringBuilder collectorDescription = new StringBuilder("Товары:");
         Integer i = 1;
         for (CartDTO cart : order.getCarts()){
             collectorDescription.append(i).append(". ").append(cart.getProduct().getName()).append(". ").append(cart.getProductQuantity()).append("шт.\n");
         }
 
-
         User collector = userService.findRandomFreeUser("ROLE_COLLECTOR");
         if (collector != null){
-            System.out.println("заказ берет коллектор "+ collector.getUsername());
+            log.info("Заказ берет коллектор "+ collector.getUsername());
             Task taskForCollector = new Task(collector,"Сборка заказа номер " + order.getId().toString(), collectorDescription.toString(), TaskType.IN_WORK, TaskPurpose.COLLECTING, order.getId());
             taskRepository.save(taskForCollector);
             userService.updateUsersBusyness(collector, BusynessType.IN_WORK);
@@ -209,7 +214,5 @@ public class TaskService {
 
         }
     }
-
-
 
 }

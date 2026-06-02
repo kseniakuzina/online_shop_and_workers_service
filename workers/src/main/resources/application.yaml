@@ -18,3 +18,8 @@ spring:
     locations: classpath:db/migration
 server:
   port: 8082
+
+online-shop:
+  service:
+    change-status-url: http://localhost:8080/home/order/changestatus
+    change-product-quantity-url: http://localhost:8080/home/order/changeproductquantity
