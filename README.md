@@ -16,16 +16,16 @@
 - Личный кабинет пользователя
 
 ### Сервис для сотрудников
-- Ролевая система (курьер, сборщик, кладовщик, менеджер, администратор)
+- Ролевая система (курьер, сборщик, работник склада, менеджер, администратор)
 - Постановка и распределение задач
 - Отслеживание выполнения заказов
 - Управление персоналом и правами доступа
 
 ## Технологический стек
-- **Бэкенд:** Java 21, Spring Boot, Spring Data JPA, Spring Security
+- **Backend:** Java 21, Spring Boot, Spring Data JPA, Spring Security
 - **База данных:** PostgreSQL 
 - **Миграции:** Flyway
-- **Фронтенд:** Thymeleaf, HTML/CSS, JavaScript
+- **Frontend:** HTML/CSS, JavaScript, Thymeleaf
 - **Сборка:** Maven (многомодульный проект)
 - **Архитектура:** Микросервисы, REST API, MVC
 
@@ -75,3 +75,20 @@ mvn spring-boot:run
 6. Откройте в браузере:
 - Магазин: http://localhost:8080/register
 - Сервис сотрудников: http://localhost:8082/register
+
+## Тестирование
+
+Проект покрыт unit-тестами для всего слоя бизнес-логики. Тесты написаны с использованием JUnit 5 и Mockito, что позволяет изолированно тестировать сервисы без поднятия базы данных и зависимых компонентов.
+
+### Структура тестов
+```
+online-shop/src/test/java/com/study/online_shop/service/
+├── CartServiceTest.java # Тесты для работы с корзиной
+├── OrderServiceTest.java # Тесты для работы с заказами
+├── ProductServiceTest.java # Тесты для работы с товарами
+└── UserServiceTest.java # Тесты для работы с пользователями (покупателями)
+
+workers/src/test/java/com/study/workers/service/
+├── TaskServiceTest.java # Тесты для работы с задачами сотрудников
+└── UserServiceTest.java # Тесты для работы с пользователями (сотрудниками)
+```
